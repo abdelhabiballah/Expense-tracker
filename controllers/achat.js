@@ -10,6 +10,23 @@ const Achat = require('../models/Achat');
 
 
 exports.getAchats = asyncHandler(async (req, res, next) => {
+    if(!req.body.company){
+        return next(
+          new ErrorResponse(
+            `User  has no company yet  `,
+            404
+          )
+        );
+      }
+        const company = await Company.find(req.body.company);
+        if(company.user.toString() !==  req.user.id){
+          return next(
+            new ErrorResponse(
+              `User  is not authorized `,
+              401
+            )
+          );
+        }
     if (req.params.courseId) {
         const achats = await Course.find({ course: req.params.courseId });
 
@@ -53,27 +70,28 @@ exports.getAchat = asyncHandler(async (req, res, next) => {
 // @access    Private
 exports.addAchat = asyncHandler(async (req, res, next) => {
     req.body.course = req.params.courseId;
+    
 
-    // req.body.user = req.user.id;
-
+    req.body.user = req.user.id;
+    req.body.company = req.user.company;
     const course = await Course.findById(req.params.courseId);
 
     if (!course) {
         return next(
-            new ErrorResponse(`No bootcamp with the id of ${req.params.bootcampId}`),
+            new ErrorResponse(`No commande found`),
             404
         );
     }
 
     // Make sure user is bootcamp owner
-    /*  if (bootcamp.user.toString() !== req.user.id && req.user.role !== 'admin') {
+      if (course.user.toString() !== req.user.id ) {
        return next(
          new ErrorResponse(
-           `User ${req.user.id} is not authorized to add a course to bootcamp ${bootcmap._id}`,
+           `User ${req.user.id} is not authorized `,
            401
          )
        );
-     }*/
+     }
 
     const achat = await Achat.create(req.body);
 
