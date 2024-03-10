@@ -1,20 +1,28 @@
 const ErrorResponse = require('../utils/errorResponse');
 const asyncHandler = require('../middleware/async');
-const Code = require('../models/Code');
+const Tax = require('../models/Tax');
 
-// @desc      Get codes
-// @route     GET /api/v1/codes
+// @desc      Get courses
+// @route     GET /api/v1/courses
+// @route     GET /api/v1/achats/:courseId/achats
 // @access    Public
 
 
-exports.getCodes = asyncHandler(async (req, res, next) => {
-
-    const codes = await Code.find();
-
+exports.getTaxes = asyncHandler(async (req, res, next) => {
+    if(!req.user.company){
+        return next(
+          new ErrorResponse(
+            `User  has no company yet  `,
+            404
+          )
+        );
+      }
+    
+    const taxes = await Tax.find();
     return res.status(200).json({
         success: true,
-        count: codes.length,
-        data: codes,
+        count: taxes.length,
+        data: taxes,
     });
 
 
@@ -31,56 +39,38 @@ exports.getCodes = asyncHandler(async (req, res, next) => {
 
 
 
-exports.getCode = asyncHandler(async (req, res, next) => {
-    const code = await Code.findById(req.params.id)
+exports.getTax = asyncHandler(async (req, res, next) => {
+    const tax = await Tax.findById(req.params.id)
 
 
     return res.status(200).json({
         success: true,
-        data: code,
+        data: tax,
     });
 });
 
 // @desc      Add course
-// @route     POST /api/v1/courses/:courseId/achats
+// @route     POST /api/v1/taxs
 // @access    Private
-exports.addCode = asyncHandler(async (req, res, next) => {
-
-
-    // req.body.user = req.user.id;
-
-
-
-    // Make sure user is bootcamp owner
-    /*  if (bootcamp.user.toString() !== req.user.id && req.user.role !== 'admin') {
-       return next(
-         new ErrorResponse(
-           `User ${req.user.id} is not authorized to add a course to bootcamp ${bootcmap._id}`,
-           401
-         )
-       );
-     }*/
-
-    const code = await Code.create(req.body);
-
-
-
-
-    return res.status(200).json({
+exports.addTax = asyncHandler(async (req, res, next) => {
+    req.body.user = req.user.id;
+    req.body.company = req.user.company
+    const tax = await Tax.create(req.body);
+     return res.status(200).json({
         success: true,
-        data: code,
+        data: tax,
     });
 });
 
 // @desc      Update course
-// @route     PUT /api/v1/courses/:id
+// @route     PUT /api/v1/taxes/:id
 // @access    Private
-exports.updateCode = asyncHandler(async (req, res, next) => {
-    let code = await Code.findById(req.params.id);
+exports.updateTax = asyncHandler(async (req, res, next) => {
+    let tax = await Tax.findById(req.params.id);
 
-    if (!code) {
+    if (!tax) {
         return next(
-            new ErrorResponse(`No course with the id of ${req.params.id}`),
+            new ErrorResponse(`No tax with the id of ${req.params.id}`),
             404
         );
     }
@@ -95,26 +85,26 @@ exports.updateCode = asyncHandler(async (req, res, next) => {
       );
     }*/
 
-    code = await Code.findByIdAndUpdate(req.params.id, req.body, {
+    tax = await Tax.findByIdAndUpdate(req.params.id, req.body, {
         new: true,
         runValidators: true,
     });
 
     return res.status(200).json({
         success: true,
-        data: code,
+        data: tax,
     });
 });
 
 // @desc      Delete course
 // @route     Delete /api/v1/achats/:id
 // @access    Private
-exports.deleteCode = asyncHandler(async (req, res, next) => {
-    const code = await Code.findById(req.params.id);
+exports.deleteTax = asyncHandler(async (req, res, next) => {
+    const tax = await Tax.findById(req.params.id);
 
-    if (!code) {
+    if (!tax) {
         return next(
-            new ErrorResponse(`No Achat with the id of ${req.params.id}`),
+            new ErrorResponse(`No Tax with the id of ${req.params.id}`),
             404
         );
     }
@@ -129,7 +119,7 @@ exports.deleteCode = asyncHandler(async (req, res, next) => {
        );
      }*/
 
-    await code.remove();
+    await tax.remove();
 
     return res.status(200).json({
         success: true,

@@ -66,7 +66,6 @@ exports.forgotPassword = asyncHandler(async (req, res, next) => {
       data: `Email sent to ${user.email}`,
     });
   } catch (err) {
-    console.log(err);
     user.resetPasswordToken = undefined;
     user.resetPasswordExpire = undefined;
 
@@ -193,9 +192,10 @@ const sendTokenResponse = (user, statusCode, res) => {
   const token = user.getSignedJwtToken();
 
   const options = {
-
+    expires:new Date(Date.now() + 60 * 60 * 24 * 14 * 1000),
     httpOnly: true,
   };
+
 
   if (process.env.NODE_ENV === 'production') {
     options.secure = true;
@@ -204,5 +204,6 @@ const sendTokenResponse = (user, statusCode, res) => {
   return res.status(statusCode).cookie('token', token, options).json({
     success: true,
     token,
+    user
   });
 };

@@ -13,7 +13,6 @@ const Bootcamp = require('../models/Bootcamp');
 
 // Include other resource routers
 const courseRotuer = require('./courses');
-const reviewRotuer = require('./reviews');
 
 const router = express.Router();
 
@@ -27,13 +26,13 @@ router.use('/:bootcampId/commendes', courseRotuer);
 
 router
   .route('/')
-  .get(advancedResults(Bootcamp, 'courses'), getBootcamps)
-  .post(createBootcamp);
+  .get(protect,advancedResults(Bootcamp,  'invoices'), getBootcamps)
+  .post(protect,createBootcamp);
 
 router
   .route('/:id')
-  .get(getBootcamp)
-  .put(updateBootcamp)
-  .delete(deleteBootcamp);
+  .get(protect,getBootcamp)
+  .put(protect,updateBootcamp)
+  .delete(protect,deleteBootcamp);
 
 module.exports = router;

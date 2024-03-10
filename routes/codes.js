@@ -8,6 +8,7 @@ const {
 } = require('../controllers/codes');
 
 const Code = require('../models/Code');
+const { protect, authorize } = require('../middleware/auth');
 
 
 const router = express.Router({ mergeParams: true });
@@ -15,12 +16,12 @@ const router = express.Router({ mergeParams: true });
 
 router
     .route('/')
-    .get(getCodes)
-    .post(addCode);
+    .get(protect,getCodes)
+    .post(protect,addCode);
 
 router
     .route('/:id')
-    .get(getCode)
-    .put(updateCode)
-    .delete(deleteCode);
+    .get(protect,getCode)
+    .put(protect,updateCode)
+    .delete(protect,deleteCode);
 module.exports = router;

@@ -20,14 +20,53 @@ const UserSchema = new mongoose.Schema({
       'Please add a valid email',
     ],
   },
-
+  logo: {
+    type: String,
+    default: 'no-photo.jpg'
+  },
+  signature: {
+    type: String,
+    default: 'no-photo.jpg'
+  },
   password: {
     type: String,
     required: [true, 'Please add a password'],
     minlength: 6,
     select: false,
   },
+  isActive : {
+    type : Boolean , 
+    default : true 
+  },
+  isFirstTime : {
+    type : Boolean , 
+    default : true 
+  },
+   type_subscribe: {
+    type:Boolean,
 
+
+   },
+   date_begin_subscribtion: {
+    type:Date,
+    default: Date.now()
+
+   },
+   date_end_subscribtion: {
+    type:Date,
+    default: Date.now()
+
+   },
+
+  hasCompany : {
+    type : Boolean , 
+    default : false 
+  },
+  company: {
+    type: mongoose.Schema.ObjectId,
+    ref: 'Company',
+  },
+   
   resetPasswordToken: String,
   resetPasswordExpire: Date,
   createdAt: {
@@ -36,6 +75,18 @@ const UserSchema = new mongoose.Schema({
   },
 });
 
+UserSchema.virtual('companies', {
+  ref: 'Company',
+  localField: '_id',
+  foreignField: 'user',
+  justOne: false,
+});
+UserSchema.virtual('taxs', {
+  ref: 'Tax',
+  localField: '_id',
+  foreignField: 'user',
+  justOne: false,
+});
 // Encrypt passwrod using bcrypt
 UserSchema.pre('save', async function (next) {
   if (!this.isModified('password')) {

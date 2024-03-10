@@ -1,12 +1,12 @@
 const path = require('path');
 const asyncHandler = require('../middleware/async');
 const ErrorResponse = require('../utils/errorResponse');
-const Bootcamp = require('../models/Bootcamp');
+const Supplier = require('../models/Supplier');
 const Company = require('../models/Company')
-// @desc      Get all bootcamps
-// @route     GET /api/v1/bootcamps
+// @desc      Get all Suppliers
+// @route     GET /api/v1/Suppliers
 // @access    Public
-exports.getBootcamps = asyncHandler(async (req, res, next) => {
+exports.getSuppliers = asyncHandler(async (req, res, next) => {
   const pgSz = +req.query.ps; // page size 
   const pgNo = +req.query.pg; //page number 
   if(!req.user.id){
@@ -18,15 +18,15 @@ exports.getBootcamps = asyncHandler(async (req, res, next) => {
     );
   }
   
-  let client = req.query.client ? req.query.client : '';
-let filter =[{ company: req.user.company  }] ;
+  let supplier = req.query.supplier ? req.query.supplier : '';
+let filter =[] ;
 
 
 
  
 
-     if(req.query.client && req.query.client != "undefined"){
-      filter.push({entreprise : req.query.client})
+     if(req.query.supplier && req.query.supplier != "undefined"){
+      filter.push({entreprise : req.query.supplier})
      }
      const sort = filter.reduce((result, item) => {
       const key = Object.keys(item)[0]; // Get the key of the current object
@@ -35,11 +35,12 @@ let filter =[{ company: req.user.company  }] ;
       return result;
     }, {});
     
-    let query =   client   ?   Bootcamp.find(sort) :   Bootcamp.find({ company: req.user.company  }).sort('-createdAt')
+    console.log(sort);
+    let query =   supplier   ?   Supplier.find(sort) :   Supplier.find({ company: req.user.company  }).sort('-createdAt')
 
       const startIndex = (pgNo - 1) * pgSz;
       const endIndex = pgNo * pgSz;
-      const total = await Bootcamp.countDocuments();
+      const total = await Supplier.countDocuments();
     
       query = query.skip(startIndex).limit(pgSz);
     
@@ -71,13 +72,13 @@ let filter =[{ company: req.user.company  }] ;
     });
 });
 
-// @desc      Get single bootcamp
-// @route     GET /api/v1/bootcamps/:id
+// @desc      Get single Supplier
+// @route     GET /api/v1/Suppliers/:id
 // @access    Public
-exports.getBootcamp = asyncHandler(async (req, res, next) => {
-  const bootcamp = await Bootcamp.findById(req.params.id);
+exports.getSupplier = asyncHandler(async (req, res, next) => {
+  const supplier = await Supplier.findById(req.params.id);
 
-  if (!bootcamp) {
+  if (!supplier) {
     return next(
       new ErrorResponse(`Client not found with id of ${req.params.id}`, 404)
     );
@@ -86,22 +87,22 @@ exports.getBootcamp = asyncHandler(async (req, res, next) => {
 
   return res.status(200).json({
     success: true,
-    data: bootcamp,
+    data: supplier,
   });
 
 
 });
 
-// @desc      Create new bootcamp
-// @route     POST /api/v1/bootcamps
+// @desc      Create new Supplier
+// @route     POST /api/v1/Suppliers
 // @access    Private
-exports.createBootcamp = asyncHandler(async (req, res, next) => {
+exports.createSupplier = asyncHandler(async (req, res, next) => {
   // Add user to req.body
 
   req.body.user = req.user.id;
  
   if(!req.user.id){
-     // Make sure user is bootcamp owner
+     // Make sure user is Supplier owner
       return next(
         new ErrorResponse(
           `User ${req.user.id} is not authorized `,
@@ -110,30 +111,32 @@ exports.createBootcamp = asyncHandler(async (req, res, next) => {
       );
     }
 
+
   
 
   const data = req.body;
-  const bootcamp = await Bootcamp.create(data);
+  const supplier = await Supplier.create(data);
   return res.status(200).json({
     success: true,
-    data: bootcamp,
+    data: supplier,
   });
 });
 
-// @desc      Update bootcamp
-// @route     PUT /api/v1/bootcamps/:id
+// @desc      Update Supplier
+// @route     PUT /api/v1/Suppliers/:id
 // @access    Private
-exports.updateBootcamp = asyncHandler(async (req, res, next) => {
-  let bootcamp = await Bootcamp.findById(req.params.id);
-  if (!bootcamp) {
+exports.updateSupplier = asyncHandler(async (req, res, next) => {
+  let supplier = await Supplier.findById(req.params.id);
+
+  if (!supplier) {
     return next(
       new ErrorResponse(`client not found with id of ${req.params.id}`, 404)
     );
   }
 
-  // Make sure user is bootcamp owner
+  // Make sure user is Supplier owner
   
-  if (bootcamp.user.toString() !== req.user.id ) {
+  if (supplier.user.toString() !== req.user.id ) {
     return next(
       new ErrorResponse(
         `User ${req.params.id} is not authorized to update this client`,
@@ -142,40 +145,29 @@ exports.updateBootcamp = asyncHandler(async (req, res, next) => {
     );
   }
 
-  bootcamp = await Bootcamp.updateOne({ '_id': req.params.id }, req.body, {
+  supplier = await Supplier.updateOne({ '_id': req.params.id }, req.body, {
     new: true,
     runValidators: true,
   });
 
   return res.status(200).json({
     success: true,
-    data: bootcamp,
+    data: supplier,
   });
 });
 
-// @desc      Delete bootcamp
-// @route     DELETE /api/v1/bootcamps/:id
+// @desc      Delete Supplier
+// @route     DELETE /api/v1/Suppliers/:id
 // @access    Private
-exports.deleteBootcamp = asyncHandler(async (req, res, next) => {
-  const bootcamp = await Bootcamp.findById(req.params.id);
+exports.deleteSupplier = asyncHandler(async (req, res, next) => {
+  const supplier = await Supplier.findById(req.params.id);
 
-  if (!bootcamp) {
+  if (!supplier) {
     return next(
       new ErrorResponse(`Client not found with id of ${req.params.id}`, 404)
     );
   }
-
-  // Make sure user is bootcamp owner
-  /* if (bootcamp.user.toString() !== req.user.id && req.user.role !== 'admin') {
-     return next(
-       new ErrorResponse(
-         `User ${req.params.id} is not authorized to delete this bootcamp`,
-         401
-       )
-     );
-   }
- */
-  bootcamp.remove();
+  supplier.remove();
 
   return res.status(200).json({
     success: true,
@@ -183,44 +175,35 @@ exports.deleteBootcamp = asyncHandler(async (req, res, next) => {
   });
 });
 
-// @desc      Get bootcamps within a radius
-// @route     GET /api/v1/bootcamps/radius/:zipcode/:distance
-// @access    Private
-exports.getBootcampsInRadius = asyncHandler(async (req, res, next) => {
-
-
-
-  // Calc radius using radians
-  // Divide dist by radius of Earth
-  // Earth Radius = 3,963 mi / 6,378 km
+exports.getSuppliersInRadius = asyncHandler(async (req, res, next) => {
   const radius = distance / 3963;
-  const bootcamps = await Bootcamp.find({
+  const suppliers = await Supplier.find({
     location: { $geoWithin: { $centerSphere: [[lng, lat], radius] } },
   });
 
   res.status(200).json({
     success: true,
-    count: bootcamps.length,
-    data: bootcamps,
+    count: suppliers.length,
+    data: suppliers,
   });
 });
 
-// @desc      Upload photo for bootcamp
-// @route     PUT /api/v1/bootcamps/:id/photo
+// @desc      Upload photo for Supplier
+// @route     PUT /api/v1/Suppliers/:id/photo
 // @access    Private
-exports.bootcampPhotoUpload = asyncHandler(async (req, res, next) => {
-  const bootcamp = await Bootcamp.findById(req.params.id);
-  if (!bootcamp) {
+exports.SupplierPhotoUpload = asyncHandler(async (req, res, next) => {
+  const supplier = await Supplier.findById(req.params.id);
+  if (!supplier) {
     return next(
-      new ErrorResponse(`Bootcamp not found with id of ${req.params.id}`, 404)
+      new ErrorResponse(`Supplier not found with id of ${req.params.id}`, 404)
     );
   }
 
-  // Make sure user is bootcamp owner
-  if (bootcamp.user.toString() !== req.user.id && req.user.role !== 'admin') {
+  // Make sure user is Supplier owner
+  if (supplier.user.toString() !== req.user.id && req.user.role !== 'admin') {
     return next(
       new ErrorResponse(
-        `User ${req.params.id} is not authorized to update this bootcamp`,
+        `User ${req.params.id} is not authorized to update this Supplier`,
         401
       )
     );
@@ -248,7 +231,7 @@ exports.bootcampPhotoUpload = asyncHandler(async (req, res, next) => {
   }
 
   // Create custom filename
-  file.name = `photo_${bootcamp._id}${path.parse(file.name).ext}`;
+  file.name = `photo_${supplier._id}${path.parse(file.name).ext}`;
 
   file.mv(`${process.env.FILE_UPLOAD_PATH}/${file.name}`, async (err) => {
     if (err) {
@@ -256,7 +239,7 @@ exports.bootcampPhotoUpload = asyncHandler(async (req, res, next) => {
       return next(new ErrorResponse(`Problem with file upload`, 500));
     }
 
-    await Bootcamp.findByIdAndUpdate(req.param.id, { photo: file.name });
+    await Supplier.findByIdAndUpdate(req.param.id, { photo: file.name });
 
     return res.status(200).json({
       success: true,
