@@ -12,7 +12,27 @@ const BootcampSchema = new mongoose.Schema(
       type: String,
       maxlength: [500]
     },
-    client: {
+    nom: {
+      type: String,
+      maxlength: [500]
+    },
+    prenom: {
+      type: String,
+      maxlength: [500]
+    },
+    rc: {
+      type: String,
+      maxlength: [500]
+    },
+    phone: {
+      type: String,
+      maxlength: [500]
+    },
+    mobile: {
+      type: String,
+      maxlength: [500]
+    },
+     fax: {
       type: String,
       maxlength: [500]
     },
@@ -24,11 +44,48 @@ const BootcampSchema = new mongoose.Schema(
         'Please add a valid email',
       ],
     },
+    website: {
+      type: String,
+    },
     adresse: {
       type: String,
     },
-
+    ville: {
+      type: String,    
+    },
+    code_postal: {
+      type: String,
+      
+    },
+    pays: {
+      type: String,
+  
+    },
+   
+    adresse_livraison: {
+      type: String,
+    },
+    ville_livraison: {
+      type: String,
+    },
+    code_postal_livraison: {
+      type: String,
+    },
+    pays_livraison: {
+      type: String,
+    },
+    notes: {
+      type: String,
+    },
     telephone: {
+      type: String,
+      maxlength: [20]
+    },
+    ModeDePaiementPrefere_client: {
+      type: String,
+      maxlength: [20]
+    },
+    terms_client: {
       type: String,
       maxlength: [20]
     },
@@ -37,11 +94,11 @@ const BootcampSchema = new mongoose.Schema(
       type: Date,
       default: Date.now,
     },
-    /*  user: {
+     user: {
         type: mongoose.Schema.ObjectId,
         ref: 'User',
         required: true,
-      },*/
+      }
   },
   {
     toJSON: { virtuals: true },
@@ -56,7 +113,6 @@ const BootcampSchema = new mongoose.Schema(
 
 // Cascade delete course when a bootcamp is deleted
 BootcampSchema.pre('remove', async function (next) {
-  console.log(`Courses being removed from bootcamp ${this._id}`);
   await this.model('Course').deleteMany({
     bootcamp: this._id,
   });
@@ -70,5 +126,12 @@ BootcampSchema.virtual('courses', {
   foreignField: 'bootcamp',
   justOne: false,
 });
+BootcampSchema.virtual('invoices', {
+  ref: 'Invoice',
+  localField: '_id',
+  foreignField: 'bootcamp',
+  justOne: false,
+});
+
 
 module.exports = mongoose.model('Bootcamp', BootcampSchema);

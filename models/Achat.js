@@ -39,12 +39,17 @@ const AchatSchema = new mongoose.Schema({
     createdAt: {
         type: Date,
         default: Date.now,
-    }
-    /*user: {
+    },
+    user: {
       type: mongoose.Schema.ObjectId,
       ref: 'User',
       required: true,
-    },*/
+    },
+    company: {
+        type: mongoose.Schema.ObjectId,
+        ref: 'Company',
+        required: true,
+      },
 });
 
 // Static method to get avg of course tuitions
@@ -62,7 +67,6 @@ AchatSchema.statics.getTotalAmount = async function (courseId) {
     ]);
 
     const total = obj[0].total
-    console.log(total);
 
     try {
         console.log(courseId);

@@ -1,14 +1,14 @@
 const express = require('express');
 const {
-    getAchats,
-    getAchat,
-    addAchat,
-    updateAchat,
-    deleteAchat,
-    recouvertes
-} = require('../controllers/achat');
+    getAccounts,
+    getAccount,
+    addAccount,
+    updateAccount,
+    deleteAccount,
+    
+} = require('../controllers/accountings');
 
-const Achat = require('../models/Achat');
+const Account = require('../models/Accounting');
 
 const router = express.Router({ mergeParams: true });
 
@@ -18,16 +18,16 @@ const { protect, authorize } = require('../middleware/auth');
 router
     .route('/')
     .get(protect,
-        advancedResults(Achat, {
+        advancedResults(Account, {
             path: 'course'
                 }),
-        getAchats
+        getAccounts
     )
-    .post(protect,addAchat);
+    .post(protect,addAccount);
 
 router
     .route('/:id')
-    .get(protect,getAchat)
-    .put(protect,updateAchat)
-    .delete(protect,deleteAchat);
+    .get(protect,getAccount)
+    .put(protect,updateAccount)
+    .delete(protect,deleteAccount);
 module.exports = router;
