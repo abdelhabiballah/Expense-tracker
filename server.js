@@ -57,7 +57,7 @@ if (process.env.NODE_ENV === 'development') {
 // File uploading
 app.use(fileupload());
 app.use(cors({
-  origin: 'https://industrieantaria.ma'
+  origin: 'http://industrieantaria.ma'
 }));
 // Sanitize data
 app.use(mongoSanitize());
