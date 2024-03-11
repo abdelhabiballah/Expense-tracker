@@ -10,6 +10,8 @@ const Expense = require('../models/Expense');
 exports.getExpenses = asyncHandler(async (req, res, next) => {
   const pgSz = +req.query.ps; // page size 
   const pgNo = +req.query.pg; //page number 
+  let filter = [];
+
   if(!req.user.id){
     return next(
       new ErrorResponse(
