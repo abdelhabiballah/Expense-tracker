@@ -21,20 +21,20 @@ exports.getExpenses = asyncHandler(async (req, res, next) => {
     );
   }
   
-  let expense_date = req.query.expense_date ? req.query.expense_date : '';
   let expense_reference_no=req.query.expense_reference_no ? req.query.expense_reference_no :''; 
   let supplier = req.query.search_supplier ? req.query.search_supplier : '';
+  let facture_achat = req.query.facture_achat ? req.query.facture_achat : '';
 
-    if(req.query.expense_date && req.query.expense_date != null && req.query.expense_date != "Invalid Date"){
-       let d = new Date(req.query.expense_date);
-      filter.push({expense_date : d})
-     }
+ 
  
      if(req.query.expense_reference_no){
       filter.push({expense_reference_no :req.query.expense_reference_no })
      }
      if(req.query.supplier && req.query.supplier != "undefined"){
       filter.push({supplier : req.query.supplier})
+     }
+     if(req.query.facture_achat){
+      filter.push({facture_achat : req.query.facture_achat})
      }
      const sort = filter.reduce((result, item) => {
       const key = Object.keys(item)[0]; // Get the key of the current object
@@ -43,7 +43,7 @@ exports.getExpenses = asyncHandler(async (req, res, next) => {
       return result;
     }, {});
     
-    let query =  expense_date || expense_reference_no || supplier   ?   Expense.find(sort) :   Expense.find().sort('-createdAt')
+    let query =  facture_achat || expense_reference_no || supplier   ?   Expense.find(sort) :   Expense.find().sort('-createdAt')
 
       const startIndex = (pgNo - 1) * pgSz;
       const endIndex = pgNo * pgSz;

@@ -22,23 +22,13 @@ exports.getCourses = asyncHandler(async (req, res, next) => {
   }
 
   let paye = req.query.paye ? req.query.paye : "";
-  let createdAt = req.query.createdAt ? req.query.createdAt : '';
-  let invoice_date_echeance = req.query.invoice_date_echeance ? req.query.invoice_date_echeance : '';
   let entreprise = req.query.entreprise ? req.query.entreprise : '';
   let facture_no = req.query.facture_no ? req.query.facture_no : '';
   let filter = [];
   if (req.query.paye) {
     filter.push({ paye: req.query.paye })
   }
-  if (req.query.createdAt && req.query.createdAt != null && req.query.createdAt != "Invalid Date") {
-    let d = new Date(req.query.createdAt);
-    filter.push({ invoice_date: d })
-  }
-  if (req.query.invoice_date_echeance && req.query.invoice_date_echeance != null && req.query.invoice_date_echeance != "Invalid Date") {
-    let d_e = new Date(req.query.invoice_date_echeance);
 
-    filter.push({ invoice_date_echeance: d_e })
-  }
   if (req.query.facture_no) {
     filter.push({ facture_no: req.query.facture_no })
   }
@@ -52,7 +42,7 @@ exports.getCourses = asyncHandler(async (req, res, next) => {
     return result;
   }, {});
 
-  let query = paye || createdAt || invoice_date_echeance || entreprise || facture_no ? Course.find(sort) : Course.find().sort('-createdAt')
+  let query = paye  || entreprise || facture_no ? Course.find(sort) : Course.find().sort('-createdAt')
 
   const startIndex = (pgNo - 1) * pgSz;
   const endIndex = pgNo * pgSz;
@@ -156,7 +146,7 @@ exports.addCourse = asyncHandler(async (req, res, next) => {
       404
     );
   }
-  req.body.prix_ht =0;
+  req.body.prix_ht = 0;
   const bootcamp = await Bootcamp.findById(req.body.bootcamp);
 
   if (!bootcamp) {
