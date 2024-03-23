@@ -108,7 +108,7 @@ exports.getCourse = asyncHandler(async (req, res, next) => {
   });
   if (!course) {
     return next(
-      new ErrorResponse(`No course with the id of ${req.params.id}`),
+      new ErrorResponse(`No commmende with the id of ${req.params.id}`),
       404
     );
   }
@@ -122,7 +122,7 @@ exports.getCourseByofNum = asyncHandler(async (req, res, next) => {
   console.log(course)
   if (!course) {
     return next(
-      new ErrorResponse(`No course with the num of ${req.params.num}`),
+      new ErrorResponse(`No commmende with the num of ${req.params.num}`),
       404
     );
   }
