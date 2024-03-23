@@ -22,26 +22,17 @@ exports.getPaiements = asyncHandler(async (req, res, next) => {
     );
   }
 
-  let createdAt = req.query.createdAt ? req.query.createdAt : '';
   let entreprise = req.query.entreprise ? req.query.entreprise : '';
-  let facture_recu_no = req.query.facture_recu_no ? req.query.facture_recu_no : '';
-  let  reference = req.query.reference ? req.query.reference : '';
+  let paiement_facture_no = req.query.paiement_facture_no ? req.query.paiement_facture_no : '';
 let filter =[{ company: req.user.company  }] ;
 
-    if(req.query.createdAt && req.query.createdAt != null && req.query.createdAt != "Invalid Date"){
-       let d = new Date(req.query.createdAt);
-      filter.push({paiement_date : d})
+   console.log(entreprise);
+   console.log(paiement_facture_no)
+   
+     if(req.query.paiement_facture_no && req.query.paiement_facture_no != "undefined"){
+      filter.push({paiement_facture_no :req.query.paiement_facture_no })
      }
-     if(req.query.reference){
 
-      filter.push({paiement_reference_no :req.query.reference })
-     }
-     if(req.query.facture_recu_no){
-      filter.push({paiement_facture_no :req.query.facture_recu_no })
-     }
-     if(req.query.facture_recu_no){
-      filter.push({paiement_recu_no :req.query.facture_recu_no })
-     }
      if(req.query.entreprise && req.query.entreprise != "undefined"){
       filter.push({bootcamp : req.query.entreprise})
      }
@@ -51,8 +42,8 @@ let filter =[{ company: req.user.company  }] ;
       result[key] = value; // Add the key-value pair to the result object
       return result;
     }, {});
-    
-    let query =  createdAt ||  entreprise || facture_recu_no || reference ?   Paiement.find(sort) :   Paiement.find({ company: req.user.company  }).sort('-createdAt')
+    console.log(sort)
+    let query =  entreprise || paiement_facture_no ?   Paiement.find(sort) :   Paiement.find().sort('-createdAt')
 
       const startIndex = (pgNo - 1) * pgSz;
       const endIndex = pgNo * pgSz;
@@ -62,7 +53,7 @@ let filter =[{ company: req.user.company  }] ;
     
       // Execute query
       const results = await query;
-    
+      console.log(results);
       // Pagination result
       const pagination = {};
     
