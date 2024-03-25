@@ -9,14 +9,7 @@ const Tax = require('../models/Tax');
 
 
 exports.getTaxes = asyncHandler(async (req, res, next) => {
-    if(!req.user.company){
-        return next(
-          new ErrorResponse(
-            `User  has no company yet  `,
-            404
-          )
-        );
-      }
+
     
     const taxes = await Tax.find();
     return res.status(200).json({
