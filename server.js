@@ -13,15 +13,11 @@ const hpp = require('hpp');
 const cors = require('cors');
 const errorHandler = require('./middleware/error');
 const connectDB = require('./config/db');
-
 // Route files
 const bootcamps = require('./routes/bootcamps');
 const courses = require('./routes/courses');
 const auth = require('./routes/auth');
 const users = require('./routes/users');
-const achats = require('./routes/achat');
-const codes = require('./routes/codes');
-const taxs = require('./routes/taxs') ;
 const invoices = require('./routes/invoices')
 const products = require('./routes/products')
 const categories = require('./routes/categories')
@@ -30,7 +26,6 @@ const paiements = require('./routes/paiements')
 const suppliers = require('./routes/suppliers')
 const expenses = require('./routes/expenses')
 const recus = require('./routes/recus')
-const devis = require('./routes/devis')
 const accounts = require('./routes/accountings')
 
 
@@ -87,11 +82,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 // Mount routers
 app.use('/clients', bootcamps);
 app.use('/commendes', courses);
-app.use('/achats', achats);
-app.use('/codes', codes)
 app.use('/auth', auth);
 app.use('/users', users);
-app.use('/taxs', taxs);
 app.use('/invoices', invoices);
 app.use('/items', products);
 app.use('/categories', categories);
@@ -100,7 +92,6 @@ app.use('/paiements', paiements);
 app.use('/suppliers', suppliers);
 app.use('/expenses', expenses);
 app.use('/recus', recus);
-app.use('/devis', devis);
 app.use('/accounts', accounts);
 
 
