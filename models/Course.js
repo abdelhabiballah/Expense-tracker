@@ -80,20 +80,16 @@ invoice_total: {
 },
   bootcamp: {
     type: mongoose.Schema.ObjectId,
-    ref: 'Bootcamp',
-    required: true,
+    ref: 'Bootcamp'
   },
   user: {
     type: mongoose.Schema.ObjectId,
     ref: 'User',
     required: true,
-  },
+  }
   
 
-  devis : {
-    type: mongoose.Schema.ObjectId,
-    ref: 'Devis',
-  }
+
 }
   ,
   {
@@ -121,40 +117,7 @@ function incrementOfNum(ofNum) {
   const incrementedNum = String(parseInt(ofNum, 10) + 1);
   return incrementedNum;
 }
-/*
-CourseSchema.pre('save', async function (next) {
-  try {
-    if (!this.isNew) return next(); // If not a new document, skip
-    const maxFactureNum = await this.constructor.findOne({}, {}, { sort: { 'facture_no': -1 } }); // Find the document with the highest facture_no
-    this.facture_no = maxFactureNum ? incrementFactureNum(maxFactureNum.facture_no) : '24-0001'; // Increment facture_num
-    next();
-  } catch (error) {
-    next(error);
-  }
-});
-function incrementFactureNum(factureNum) {
-  // If factureNum is not a string or doesn't contain '-', return the original value
-  if (typeof factureNum !== 'string' || !factureNum.includes('-')) {
-    return factureNum;
-  }
-  const [prefix, numStr] = factureNum.split('-');
-  const incrementedNum = String(parseInt(numStr, 10) + 1).padStart(numStr.length, '0');
-  return `${prefix}-${incrementedNum}`;
-}
-*/
-// Reverse populate with virtuals
-CourseSchema.virtual('achats', {
-  ref: 'Achat',
-  localField: '_id',
-  foreignField: 'course',
-  justOne: false,
-});
-CourseSchema.virtual('paiements', {
-  ref: 'Paiement',
-  localField: '_id',
-  foreignField: 'course',
-  justOne: false,
-});
+
 
 CourseSchema.post('save', async function () {
 });

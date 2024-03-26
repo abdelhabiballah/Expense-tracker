@@ -118,7 +118,6 @@ exports.getCourse = asyncHandler(async (req, res, next) => {
 });
 exports.getCourseByofNum = asyncHandler(async (req, res, next) => {
   const course = await Course.find({ of_no: req.params.num })
-  console.log(course)
   if (!course) {
     return next(
       new ErrorResponse(`No commmende with the num of ${req.params.num}`),
@@ -236,16 +235,6 @@ exports.deleteCourse = asyncHandler(async (req, res, next) => {
       404
     );
   }
-
-  // Make sure user is course owner
-  /* if (course.user.toString() !== req.user.id && req.user.role !== 'admin') {
-     return next(
-       new ErrorResponse(
-         `User ${req.user.id} is not authorized to delete course ${course._id}`,
-         401
-       )
-     );
-   }*/
 
   await course.remove();
 
