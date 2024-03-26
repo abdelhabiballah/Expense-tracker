@@ -1,8 +1,6 @@
-const path = require('path');
 const express = require('express');
 const dotenv = require('dotenv');
 const morgan = require('morgan');
-const colors = require('colors');
 const fileupload = require('express-fileupload');
 const cookieParser = require('cookie-parser');
 const mongoSanitize = require('express-mongo-sanitize');
@@ -18,15 +16,8 @@ const bootcamps = require('./routes/bootcamps');
 const courses = require('./routes/courses');
 const auth = require('./routes/auth');
 const users = require('./routes/users');
-const invoices = require('./routes/invoices')
-const products = require('./routes/products')
-const categories = require('./routes/categories')
-const companies = require('./routes/companies')
-const paiements = require('./routes/paiements')
 const suppliers = require('./routes/suppliers')
 const expenses = require('./routes/expenses')
-const recus = require('./routes/recus')
-const accounts = require('./routes/accountings')
 
 
 
@@ -74,25 +65,14 @@ app.use(limiter);
 // Prevent http param pollution
 app.use(hpp());
 
-// Enable CORS
-
-// Set static folder
-app.use(express.static(path.join(__dirname, 'public')));
 
 // Mount routers
 app.use('/clients', bootcamps);
 app.use('/commendes', courses);
 app.use('/auth', auth);
 app.use('/users', users);
-app.use('/invoices', invoices);
-app.use('/items', products);
-app.use('/categories', categories);
-app.use('/companies', companies);
-app.use('/paiements', paiements);
 app.use('/suppliers', suppliers);
 app.use('/expenses', expenses);
-app.use('/recus', recus);
-app.use('/accounts', accounts);
 
 
 
@@ -106,13 +86,13 @@ app.use(errorHandler);
 const PORT = process.env.PORT || 5000;
 const server = app.listen(PORT, () => {
   console.log(
-    `Server running in ${process.env.NODE_ENV} mode on port ${PORT}`.yellow.bold
+    `Server running in ${process.env.NODE_ENV} mode on port ${PORT}`
   );
 });
 
 // Handle unhandled promise rejections
 process.on('unhandledRejection', (err, promise) => {
-  console.log(`Error: ${err.message}`.red.bold);
+  console.log(`Error: ${err.message}`);
 
   // Close server & exit process
   server.close(() => process.exit(1));

@@ -2,10 +2,6 @@ const path = require('path');
 const asyncHandler = require('../middleware/async');
 const ErrorResponse = require('../utils/errorResponse');
 const Bootcamp = require('../models/Bootcamp');
-const Company = require('../models/Company')
-// @desc      Get all bootcamps
-// @route     GET /api/v1/bootcamps
-// @access    Public
 exports.getBootcamps = asyncHandler(async (req, res, next) => {
   const pgSz = +req.query.ps; // page size 
   const pgNo = +req.query.pg; //page number 
@@ -19,7 +15,7 @@ exports.getBootcamps = asyncHandler(async (req, res, next) => {
   }
   
   let client = req.query.client ? req.query.client : '';
-let filter =[{ company: req.user.company  }] ;
+let filter =[] ;
 
 
 
@@ -35,7 +31,7 @@ let filter =[{ company: req.user.company  }] ;
       return result;
     }, {});
     
-    let query =   client   ?   Bootcamp.find(sort) :   Bootcamp.find({ company: req.user.company  }).sort('-createdAt')
+    let query =   client   ?   Bootcamp.find(sort) :   Bootcamp.find().sort('-createdAt')
 
       const startIndex = (pgNo - 1) * pgSz;
       const endIndex = pgNo * pgSz;
@@ -165,16 +161,6 @@ exports.deleteBootcamp = asyncHandler(async (req, res, next) => {
     );
   }
 
-  // Make sure user is bootcamp owner
-  /* if (bootcamp.user.toString() !== req.user.id && req.user.role !== 'admin') {
-     return next(
-       new ErrorResponse(
-         `User ${req.params.id} is not authorized to delete this bootcamp`,
-         401
-       )
-     );
-   }
- */
   bootcamp.remove();
 
   return res.status(200).json({
@@ -202,65 +188,5 @@ exports.getBootcampsInRadius = asyncHandler(async (req, res, next) => {
     success: true,
     count: bootcamps.length,
     data: bootcamps,
-  });
-});
-
-// @desc      Upload photo for bootcamp
-// @route     PUT /api/v1/bootcamps/:id/photo
-// @access    Private
-exports.bootcampPhotoUpload = asyncHandler(async (req, res, next) => {
-  const bootcamp = await Bootcamp.findById(req.params.id);
-  if (!bootcamp) {
-    return next(
-      new ErrorResponse(`Bootcamp not found with id of ${req.params.id}`, 404)
-    );
-  }
-
-  // Make sure user is bootcamp owner
-  if (bootcamp.user.toString() !== req.user.id && req.user.role !== 'admin') {
-    return next(
-      new ErrorResponse(
-        `User ${req.params.id} is not authorized to update this bootcamp`,
-        401
-      )
-    );
-  }
-
-  if (!req.files) {
-    return next(new ErrorResponse(`Please upload a file`, 404));
-  }
-
-  const file = req.files.file;
-
-  // Make sure the image is a photo
-  if (!file.mimetype.startsWith('image')) {
-    return next(new ErrorResponse(`Please upload an image file`, 404));
-  }
-
-  // Check filesize
-  if (file.size > process.env.MAX_FILE_UPLOAD) {
-    return next(
-      new ErrorResponse(
-        `Please upload an image less than ${process.env.MAX_FILE_UPLOAD}`,
-        404
-      )
-    );
-  }
-
-  // Create custom filename
-  file.name = `photo_${bootcamp._id}${path.parse(file.name).ext}`;
-
-  file.mv(`${process.env.FILE_UPLOAD_PATH}/${file.name}`, async (err) => {
-    if (err) {
-      console.error(err);
-      return next(new ErrorResponse(`Problem with file upload`, 500));
-    }
-
-    await Bootcamp.findByIdAndUpdate(req.param.id, { photo: file.name });
-
-    return res.status(200).json({
-      success: true,
-      data: file.name,
-    });
   });
 });

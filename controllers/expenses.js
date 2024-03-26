@@ -1,7 +1,5 @@
 const ErrorResponse = require('../utils/errorResponse');
 const asyncHandler = require('../middleware/async');
-const Supplier = require('../models/Supplier');
-const Company = require('../models/Company')
 const Expense = require('../models/Expense');
 // @desc      Get commande
 // @route     GET /api/v1/commandes
@@ -107,25 +105,20 @@ exports.getExpense = asyncHandler(async (req, res, next) => {
 exports.addExpense = asyncHandler(async (req, res, next) => {
 
   req.body.user = req.user.id;
-  req.body.company = req.user.company;
 
-
+console.log(req.body)
 if(!req.user.id){
   return next(
     new ErrorResponse(`unauthorized ${req.user.id}`),
     404
   );
 }
-if (req.body.supplier){
-    const supplier = await Supplier.findById(req.body.supplier);
-
-}
 
 
 
 
   const expense = await Expense.create(req.body);
-
+ console.log(expense)
   return res.status(200).json({
     success: true,
     data: expense,
@@ -145,15 +138,6 @@ exports.updateExpense = asyncHandler(async (req, res, next) => {
     );
   }
 
-  // Make sure user is Expense owner
-  /*if (Expense.user.toString() !== req.user.id && req.user.role !== 'admin') {
-    return next(
-      new ErrorResponse(
-        `User ${req.user.id} is not authorized to update Expense ${Expense._id}`,
-        401
-      )
-    );
-  }*/
 
   expense = await Expense.findByIdAndUpdate(req.params.id, req.body, {
     new: true,
@@ -179,15 +163,6 @@ exports.deleteExpense = asyncHandler(async (req, res, next) => {
     );
   }
 
-  // Make sure user is Expense owner
-  /* if (Expense.user.toString() !== req.user.id && req.user.role !== 'admin') {
-     return next(
-       new ErrorResponse(
-         `User ${req.user.id} is not authorized to delete Expense ${Expense._id}`,
-         401
-       )
-     );
-   }*/
 
   await expense.remove();
 
