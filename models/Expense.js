@@ -62,6 +62,5 @@ const ExpenseSchema = new mongoose.Schema({
 
 
 
-ExpenseSchema.post('save', async function () {
-});
+
 module.exports = mongoose.model('Expense', ExpenseSchema);
