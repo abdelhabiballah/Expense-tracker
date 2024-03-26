@@ -13,3 +13,4 @@ Ensure you have the following installed:
 
 Node.js (v14 or newer): Download & Install Node.js
 MongoDB (v4.4 or newer): Download & Install MongoDB, and ensure it's running on its default port (27017).
+<img width="951" alt="Capture d'écran 2024-03-26 093308" src="https://github.com/abdelhabiballah/exemple/assets/128556275/e5859a7c-9f14-441a-9970-a81b306c42ad">
