@@ -84,7 +84,6 @@ ExpenseSchema.statics.addToBalanceAccount = async function (accountId, invoice_s
             balance_total, balance_history
         });
     } catch (err) {
-        console.log(err);
     }
 }
 ExpenseSchema.post('save', async function () {

@@ -9,14 +9,9 @@ const {
   getCourseByofNum
 } = require('../controllers/courses');
 
-const Course = require('../models/Course');
-const achatRouter = require('./achat');
-
 const router = express.Router({ mergeParams: true });
 
-const advancedResults = require('../middleware/advancedResults');
 const { protect, authorize } = require('../middleware/auth');
-router.use('/:courseId/achats', achatRouter);
 router
   .route('/')
   .get(protect,

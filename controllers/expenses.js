@@ -1,7 +1,6 @@
 const ErrorResponse = require('../utils/errorResponse');
 const asyncHandler = require('../middleware/async');
 const Supplier = require('../models/Supplier');
-const Company = require('../models/Company')
 const Expense = require('../models/Expense');
 // @desc      Get commande
 // @route     GET /api/v1/commandes
@@ -107,7 +106,6 @@ exports.getExpense = asyncHandler(async (req, res, next) => {
 exports.addExpense = asyncHandler(async (req, res, next) => {
 
   req.body.user = req.user.id;
-  req.body.company = req.user.company;
 
 
 if(!req.user.id){

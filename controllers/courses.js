@@ -2,7 +2,6 @@ const ErrorResponse = require('../utils/errorResponse');
 const asyncHandler = require('../middleware/async');
 const Course = require('../models/Course');
 const Bootcamp = require('../models/Bootcamp');
-const Company = require('../models/Company')
 const Expense = require('../models/Expense');
 
 // @desc      Get commande

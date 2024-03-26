@@ -18,15 +18,8 @@ const bootcamps = require('./routes/bootcamps');
 const courses = require('./routes/courses');
 const auth = require('./routes/auth');
 const users = require('./routes/users');
-const invoices = require('./routes/invoices')
-const products = require('./routes/products')
-const categories = require('./routes/categories')
-const companies = require('./routes/companies')
-const paiements = require('./routes/paiements')
 const suppliers = require('./routes/suppliers')
 const expenses = require('./routes/expenses')
-const recus = require('./routes/recus')
-const accounts = require('./routes/accountings')
 
 
 
@@ -84,15 +77,8 @@ app.use('/clients', bootcamps);
 app.use('/commendes', courses);
 app.use('/auth', auth);
 app.use('/users', users);
-app.use('/invoices', invoices);
-app.use('/items', products);
-app.use('/categories', categories);
-app.use('/companies', companies);
-app.use('/paiements', paiements);
 app.use('/suppliers', suppliers);
 app.use('/expenses', expenses);
-app.use('/recus', recus);
-app.use('/accounts', accounts);
 
 
 

@@ -57,15 +57,6 @@ const UserSchema = new mongoose.Schema({
     default: Date.now()
 
    },
-
-  hasCompany : {
-    type : Boolean , 
-    default : false 
-  },
-  company: {
-    type: mongoose.Schema.ObjectId,
-    ref: 'Company',
-  },
    
   resetPasswordToken: String,
   resetPasswordExpire: Date,
@@ -75,12 +66,6 @@ const UserSchema = new mongoose.Schema({
   },
 });
 
-UserSchema.virtual('companies', {
-  ref: 'Company',
-  localField: '_id',
-  foreignField: 'user',
-  justOne: false,
-});
 UserSchema.virtual('taxs', {
   ref: 'Tax',
   localField: '_id',

@@ -2,7 +2,6 @@ const path = require('path');
 const asyncHandler = require('../middleware/async');
 const ErrorResponse = require('../utils/errorResponse');
 const Supplier = require('../models/Supplier');
-const Company = require('../models/Company')
 // @desc      Get all Suppliers
 // @route     GET /api/v1/Suppliers
 // @access    Public
@@ -35,8 +34,7 @@ let filter =[] ;
       return result;
     }, {});
     
-    console.log(sort);
-    let query =   supplier   ?   Supplier.find(sort) :   Supplier.find({ company: req.user.company  }).sort('-createdAt')
+    let query =   supplier   ?   Supplier.find(sort) :   Supplier.find().sort('-createdAt')
 
       const startIndex = (pgNo - 1) * pgSz;
       const endIndex = pgNo * pgSz;

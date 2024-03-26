@@ -126,12 +126,7 @@ BootcampSchema.virtual('courses', {
   foreignField: 'bootcamp',
   justOne: false,
 });
-BootcampSchema.virtual('invoices', {
-  ref: 'Invoice',
-  localField: '_id',
-  foreignField: 'bootcamp',
-  justOne: false,
-});
+
 
 
 module.exports = mongoose.model('Bootcamp', BootcampSchema);

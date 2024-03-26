@@ -2,7 +2,6 @@ const crypto = require('crypto');
 const ErrorResponse = require('../utils/errorResponse');
 const asyncHandler = require('../middleware/async');
 const User = require('../models/User');
-const sendEmail = require('../utils/sendEmail');
 require("dotenv").config();
 
 // @desc      Get current logged in user
@@ -147,7 +146,6 @@ exports.resetpassword = asyncHandler(async (req, res, next) => {
 // @access    Public
 exports.register = asyncHandler(async (req, res, next) => {
   const { name, email, password, role } = req.body;
-  console.log(req.body);
   const user = await User.create({
     name,
     email,

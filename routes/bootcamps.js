@@ -5,8 +5,7 @@ const {
   createBootcamp,
   updateBootcamp,
   deleteBootcamp,
-  getBootcampsInRadius,
-  bootcampPhotoUpload,
+
 } = require('../controllers/bootcamps');
 
 const Bootcamp = require('../models/Bootcamp');
