@@ -18,37 +18,79 @@ exports.getExpenses = asyncHandler(async (req, res, next) => {
       )
     );
   }
-  
-  let expense_reference_no=req.query.expense_reference_no ? req.query.expense_reference_no :''; 
-  let supplier = req.query.search_supplier ? req.query.search_supplier : '';
-  let facture_achat = req.query.facture_achat ? req.query.facture_achat : '';
 
- 
- 
-     if(req.query.expense_reference_no){
+  let expense_reference_no=req.query.expense_reference_no ? req.query.expense_reference_no :''; 
+  let supplier = req.query.supplier ? req.query.supplier : '';
+  let of_no = req.query.of_no ? req.query.of_no : '';
+  let type_fa = req.query.type_fa ? req.query.type_fa : '';
+  let type = req.query.type ? req.query.type : '';
+  let famille = req.query.famille ? req.query.famille : '';
+  let date_achat = req.query.date_achat ? req.query.date_achat : '';
+  let facture_achat = req.query.facture_achat ? req.query.facture_achat : '';
+  let paye = req.query.search_paye ? req.query.search_paye : '';
+
+
+  if (of_no == 0) {
+    of_no = ''
+  }
+  if(req.query.date_achat && req.query.date_achat != "undefined" ){
+    const originalDate = new Date(date_achat);
+
+    // Get the year, month, and day components from the parsed date
+    const year = originalDate.getFullYear();
+    const month = (originalDate.getMonth() + 1).toString().padStart(2, '0'); // Adding 1 because getMonth() returns zero-based month
+    const day = originalDate.getDate().toString().padStart(2, '0');
+    
+    // Construct the formatted date string in the desired format
+    const formattedDateString = `${year}-${month}-${day}`; 
+      filter.push({expense_date : formattedDateString})
+  }
+     if(req.query.expense_reference_no && req.query.expense_reference_no != "undefined"){
       filter.push({expense_reference_no :req.query.expense_reference_no })
      }
      if(req.query.supplier && req.query.supplier != "undefined"){
-      filter.push({supplier : req.query.supplier})
+      filter.push({supplier :req.query.supplier})
      }
-     if(req.query.facture_achat){
+     if(req.query.facture_achat  && req.query.facture_achat != "undefined"){
       filter.push({facture_achat : req.query.facture_achat})
      }
+     if(req.query.famille  && req.query.famille != "undefined"){
+      filter.push({expense_categorie : req.query.famille})
+     }
+
+     if(req.query.type  && req.query.type != "undefined"){
+      filter.push({type : req.query.type})
+     }
+     if(req.query.type_fa  && req.query.type_fa != "undefined"){
+      filter.push({type_fa : req.query.type_fa})
+     }
+     if (req.query.of_no && req.query.of_no != "undefined") {
+      filter.push({ of_no: req.query.of_no })
+    }
+    if (req.query.paye && req.query.paye != "undefined") {
+      filter.push({ paye: req.query.paye })
+    }
      const sort = filter.reduce((result, item) => {
       const key = Object.keys(item)[0]; // Get the key of the current object
       const value = item[key]; // Get the value of the current object
       result[key] = value; // Add the key-value pair to the result object
       return result;
     }, {});
-    
-    let query =  facture_achat || expense_reference_no || supplier   ?   Expense.find(sort) :   Expense.find().sort('-createdAt')
+    let query =
+    facture_achat ||
+     expense_reference_no || 
+     type || 
+     type_fa||
+     famille ||
+     date_achat ||
+     of_no ||
+     paye || supplier ?   Expense.find(sort) :   Expense.find().sort('-createdAt')
 
       const startIndex = (pgNo - 1) * pgSz;
       const endIndex = pgNo * pgSz;
       const total = await Expense.countDocuments();
     
       query = query.skip(startIndex).limit(pgSz);
-    
       // Execute query
       const results = await query;
     

@@ -44,6 +44,7 @@ const ExpenseSchema = new mongoose.Schema({
         type: Date,
         default: Date.now,
     },
+    
     supplier: {
         type: mongoose.Schema.ObjectId,
         ref: 'Supplier',
